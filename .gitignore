@@ -1,0 +1,7 @@
+# Log files
+*.log
+server_*.log
+*.log.*
+logs/
+log/
+/node_modules/
